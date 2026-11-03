@@ -1,0 +1,18 @@
+# dataset path
+#path: /home/yutian/datasets_railway/images
+#train: /home/yutian/datasets_railway/images/train  # path + train
+#val: /home/yutian/datasets_railway/images/val # path + val
+#test: /home/yutian/datasets_railway/images/test # path + test
+path: F:\Yipeng_File\\Data\\APDD-DNV\\APDD-Day # dataset root dir
+train: images//train # train images (relative to 'path') 128 images
+val: images//val # val images (relative to 'path') 128 images
+test: images//test
+
+# Classes
+names:
+  0: Joint_deterioration
+  1: Corner_break
+  2: Crack
+  3: Grouting_patching
+  4: Corner_pothole
+  5: Localized_patching

@@ -1,0 +1,14 @@
+path: F:/Yipeng_File/Data/APDD-DNV/APDD-MultiIllum
+
+train: images/train
+val: images/val
+test: images/test
+
+nc: 6
+names:
+  0: Joint_deterioration
+  1: Corner_break
+  2: Crack
+  3: Grouting_patching
+  4: Corner_pothole
+  5: Localized_patching

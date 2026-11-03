@@ -1,0 +1,47 @@
+# Parameters
+nc: 6  # number of classes
+scale: n  # use the nano ('n') compound scale
+scales:  # model compound scaling constants
+  # [depth, width, max_channels]
+  n: [0.33, 0.25, 1024]  # selected model scale
+  s: [0.33, 0.50, 1024]
+  m: [0.67, 0.75, 768]
+  l: [1.00, 1.00, 512]
+  x: [1.00, 1.25, 512]
+
+# YOLOv8.0n backbone
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Conv, [64, 3, 2]]  # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]  # 1-P2/4
+  - [-1, 3, C2f, [128, True]]
+  - [-1, 1, Conv, [256, 3, 2]]  # 3-P3/8
+  - [-1, 6, C2f, [256, True]]
+  - [-1, 1, Conv, [512, 3, 2]]  # 5-P4/16
+  - [-1, 6, C2f, [512, True]]
+  - [-1, 1, Conv, [1024, 3, 2]]  # 7-P5/32
+  - [-1, 3, C2fMLLAHybrid, [1024, True, 1, 0.50, 0.05]]  # MiGLA-CPE / C2fMLLAHybrid at P5
+  - [-1, 1, SPPF, [1024, 5]]  # 9-SPPF
+
+# Multi-scale feature fusion and detection head
+head:
+  - [-1, 1, Conv, [256, 1, 1]]  # P5 projection
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [6, 1, Conv, [256, 1, 1, None, 1, 1, False]]  # backbone P4 projection
+  - [[-2, -1], 1, Concat, [1]]  # cat backbone P4
+  - [-1, 3, C2f, [256]]  # P4 fusion
+  - [-1, 1, Conv, [256, 1, 1]]  # P4 projection
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [4, 1, Conv, [256, 1, 1, None, 1, 1, False]]  # backbone P3 projection
+  - [[-2, -1], 1, Concat, [1]]  # cat backbone P3
+  - [-1, 3, C2f, [512]]  # 19 (P3/8-small)
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [[-1, 15], 1, Concat, [1]]  # cat head P4
+  - [-1, 3, C2f, [512]]  # 22 (P4/16-medium)
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [[-1, 10], 1, Concat, [1]]  # cat head P5
+  - [-1, 3, C2f, [512]]  # 25 (P5/32-large)
+  - [-1, 1, LSKA, [11, True, 0.05]]  # 26 (P5/32-large; LSKA k=11, residual=True)
+  - [[19, 22, 26], 1, DynamicHead, [nc]]  # 27 DynamicHead(P3, P4, P5)
+
+dyhead_alpha: 0.75  # configured cross-scale fusion coefficient
