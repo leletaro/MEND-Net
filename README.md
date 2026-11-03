@@ -25,8 +25,6 @@ The planned publication configuration includes:
 - **LSKA:** P5 contextual module with a nominal **11 × 11** effective kernel and a residual configuration. The code and documentation must specify the actual sequence of separable convolutions, padding, dilation, and any learnable scaling.
 - **DyHead:** three detection refinement layers consuming the **P3, P4, and P5** features. The actual adjacent-scale fusion coefficient must be recorded per released experiment in the model configuration or training script.
 
-**Important configuration distinction.** The comparison experiment named `APDD_DyHead` uses **α = 0.50** even if that value is omitted from its run-directory name. The historical E10-Full configuration also used **α = 0.50**. The selected training script originally named `Trainv11UP_MEND_a075_300.py` suggests a potentially different configuration (**α = 0.75**) by filename, but filenames do not establish runtime settings. **Do not report a single MEND-Net α value until the selected script and checkpoint have been checked.** Document the released MEND-Net value here after verification: **`[VERIFY FROM CODE AND CHECKPOINT]`**.
-
 For the implemented equations, upstream correspondence, and modification-level comparison, see [`docs/MODULE_PROVENANCE.md`](docs/MODULE_PROVENANCE.md). Do not replace these with conceptual equations that do not exactly describe the implementation.
 
 ## 3. APDD-DNV dataset
@@ -41,9 +39,9 @@ The dataset configurations and splits used in the revised experimental protocol 
 | --- | ---: | ---: | ---: |
 | APDD-Day | 672 | 155 | 155 |
 | APDD-Night | 846 | 192 | 192 |
-| APDD-MultiIllum (V2) | 935 | 80 | 215 |
+| APDD-MultiIllum  | 935 | 80 | 215 |
 
-**APDD-MultiIllum V2 uses real daytime and real nighttime images; it does not include synthetically darkened nighttime images.** See the manuscript for the source-image allocation and airport-specific partitions. The same source image must not be assigned to multiple splits *within an evaluated configuration*. Images reused across different configurations must be disclosed rather than counted as additional independent originals.
+**APDD-MultiIllum uses real daytime and real nighttime images; it does not include synthetically darkened nighttime images.** See the manuscript for the source-image allocation and airport-specific partitions. The same source image must not be assigned to multiple splits *within an evaluated configuration*. Images reused across different configurations must be disclosed rather than counted as additional independent originals.
 
 Data files are not included here unless their redistribution is explicitly authorized. A reproducible release should provide, subject to permissions, the exact split manifests, class definitions, preprocessing instructions, and dataset-YAML examples. **Do not commit private image data or absolute Windows paths.**
 
