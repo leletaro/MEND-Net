@@ -37,6 +37,19 @@ import ultralytics
 import yaml
 from ultralytics import YOLO
 
+# MEND_NO_THOP_FLOPS_WINDOWS_FIX_V1
+# Prevent Ultralytics model.fuse() -> model.info() -> THOP -> torchvision
+# deform_conv2d from crashing the Windows interpreter during final_eval().
+# Model forwards, weights, gradients, evaluation metrics, and saved checkpoints
+# are unchanged. Only *reporting* of model information/FLOPs is disabled.
+import ultralytics.utils.torch_utils as _mend_torch_utils
+from ultralytics.nn.tasks import BaseModel as _MENDBaseModel
+
+_mend_torch_utils.get_flops = lambda *args, **kwargs: 0.0
+_MENDBaseModel.info = lambda self, *args, **kwargs: None
+print("[MEND_NO_THOP_FLOPS_PATCH_ACTIVE]", flush=True)
+
+
 # ============================================================
 # 3. Editable configuration -- EXACTLY the 5 entries requested
 # ============================================================
